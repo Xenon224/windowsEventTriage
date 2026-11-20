@@ -1,5 +1,6 @@
 # test
 /test/
 /scenarios/
+__pycache__/
 
 .venv

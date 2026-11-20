@@ -1,6 +1,12 @@
 from pathlib import Path
 import sqlite3
+import shutil
+import os
+from fileInfo import info
 
+"""
+the code keeps growing aaah i can't stop it , it looking like a speghatti mama mia 
+"""
 class scenarios:
     def __init__(self):
         pass
@@ -31,4 +37,36 @@ class scenarios:
 
         connection = sqlite3.connect(db)
         return folder, connection
+
+    """
+    screw os , me and my homeies us pathlib 
+    """
+    def addFile(self,filepath,folder,conn):
+        filepath = Path(filepath)
+        folder = Path(folder)
+
+        destination = folder / filepath.name
+
+        shutil.copy2(filepath, destination)
+
+        file_name = filepath.name
+        fileinfo = info(destination)
+
+        cursor = conn.cursor()
+        try:
+            cursor.execute(
+                """
+                INSERT INTO files (filename,file_path,sha256)
+                VALUES(?,?,?)
+                """,
+                (file_name,str(destination),fileinfo.computeHash())
+            )
+            conn.commit()
+
+        except Exception:
+            conn.rollback()
+            raise
+
+        finally:
+            conn.close()
 
