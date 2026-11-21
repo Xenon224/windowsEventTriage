@@ -1,9 +1,9 @@
 import hashlib
 from pathlib import Path
 
-"""
-omg such a cute function
-"""
+
+#omg such a cute function
+
 class info:
     def __init__(self, filepath):
         self.filepath = Path(filepath)

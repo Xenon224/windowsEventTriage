@@ -4,9 +4,9 @@ import shutil
 import os
 from fileInfo import info
 
-"""
-the code keeps growing aaah i can't stop it , it looking like a speghatti mama mia 
-"""
+
+#the code keeps growing aaah i can't stop it , it looking like a speghatti mama mia 
+
 class scenarios:
     def __init__(self):
         pass
