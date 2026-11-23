@@ -2,8 +2,7 @@ from pathlib import Path
 import Evtx.Evtx as evtx
 from lxml import etree
 import pandas as pd
-import duckdb ,json
-#choose duckdb instead of sql , it's better for analystics . source - google and ai overview :/
+import sqlite3 ,json
 
 namespace = {'ns': 'http://schemas.microsoft.com/win/2004/08/events/event'}
 # yes microsoft , stuck in the 2k are we?
@@ -12,7 +11,10 @@ class digestion:
     def __init__(self,scenario):
         self.folder = Path(f"scenarios/{scenario}")
         self.errors = 0
-        self.con = duckdb.connect(str(self.folder / "events.duckdb"))
+        self.con = sqlite3.connect(str(self.folder / "events.db"))
+
+        self.con.execute("PRAGMA journal_mode=WAL")
+        self.con.execute("PRAGMA synchronous=NORMAL")
         
         self.con.execute("""
         CREATE TABLE IF NOT EXISTS events (
@@ -73,15 +75,14 @@ class digestion:
 
     # insert ze batch into ze database ya 
     def insertBatch(self,batch):
-        df = pd.DataFrame(batch)
-        df["timestamp"] = df["timestamp"].dt.tz_convert(None)# keep the og utc 
-        df["data"] = df["data"].apply(json.dumps)
-
-        # dude thank god for ai did these queries i kept messing it up :'[
-        self.con.execute("""
-        INSERT OR IGNORE INTO events
-        SELECT timestamp, event_id, provider, channel, computer, record_id,
-               level, user_sid, source_file, data, raw_xml FROM df""")
+        rows = [(
+        r["timestamp"].isoformat(), r["event_id"], r["provider"],
+        r["channel"], r["computer"], r["record_id"], r["level"],
+        r["user_sid"], r["source_file"], json.dumps(r["data"]), r["raw_xml"]) for r in batch]
+       
+        self.con.executemany("INSERT OR IGNORE INTO events VALUES (?,?,?,?,?,?,?,?,?,?,?)", rows)
+       
+        self.con.commit()
 
     #storing in batches - so doesn't load everything into memory at once and query db for each record
     def store(self, file):
@@ -93,3 +94,4 @@ class digestion:
                 batch = []
         if batch: # remaning left over batch
             self.insertBatch(batch)
+
