@@ -37,23 +37,28 @@ class digestion:
                     s = root.find('ns:System', namespace)# iykyk
 
                     #-- data --
-                    data = {}
-                    # ngl never though of this thanks ai , otherwise i would have had to do list with [0] >:[
-                    container = root.find('ns:EventData',namespace)
-                    if container is not None:
-                        for i,child in enumerate(container):
-                            key = child.get("Name") or f"param{i}"
-                            base,n = key,2
+                    # THIS SHIT AI . lord i was gonna parse the xml with [0] and miss other values ifykyk
 
-                            while key in data :
-                                key = f"{base}_{n}"
-                                n += 1
-                                data[key] = child.text
-                            else:
-                                ud = root.find('ns:UserData', namespace)
-                                if ud is not None and len(ud):
-                                    for child in ud[0]:
-                                        data[etree.QName(child).localname] = child.text
+                    data = {}
+                    def add_data_field(key, value):
+                        base, suffix = key, 2
+                        while key in data:
+                            key = f"{base}_{suffix}"
+                            suffix += 1
+                        data[key] = value
+
+                    event_data = root.find('ns:EventData', namespace)
+                    if event_data is not None:
+                        for i, child in enumerate(event_data):
+                            key = child.get("Name") or f"param{i}"
+                            add_data_field(key, child.text)
+
+                    user_data = root.find('ns:UserData', namespace)
+                    if user_data is not None and len(user_data):
+                        for child in user_data[0]:
+                            add_data_field(etree.QName(child).localname, child.text)
+
+                    #end of ai :]
 
                     sec = s.find('ns:Security', namespace)
 
@@ -94,4 +99,11 @@ class digestion:
                 batch = []
         if batch: # remaning left over batch
             self.insertBatch(batch)
+        
+
+
+if __name__ == "__main__":
+    obj = digestion("example2")
+    obj.store("Security.evtx")
+    obj.con.close()
 
