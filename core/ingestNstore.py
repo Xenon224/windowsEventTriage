@@ -99,11 +99,4 @@ class digestion:
                 batch = []
         if batch: # remaning left over batch
             self.insertBatch(batch)
-        
-
-
-if __name__ == "__main__":
-    obj = digestion("example2")
-    obj.store("Security.evtx")
-    obj.con.close()
 
