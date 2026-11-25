@@ -1,0 +1,118 @@
+#yes these rules are llm generated . saved me time 
+
+rules:
+  # ---------------- Security ----------------
+  - {id: R001, channel: Security, title: "Audit log cleared", severity: high, event_id: 1102}
+  - {id: R002, channel: Security, title: "Audit policy changed", severity: medium, event_id: 4719}
+  - id: R003
+    channel: Security
+    title: Scheduled task created by a real user
+    severity: high
+    event_id: 4698
+    conditions:
+      - {field: SubjectUserName, op: not_endswith, value: "$"}
+  - id: R004
+    channel: Security
+    title: Interactive logon by a real user
+    severity: low
+    event_id: 4624
+    conditions:
+      - {field: LogonType, op: in, value: ["2", "10"]}
+      - {field: TargetUserName, op: not_endswith, value: "$"}
+  - {id: R005, channel: Security, title: "Failed logon", severity: medium, event_id: 4625}
+  - {id: R006, channel: Security, title: "Logon with explicit credentials", severity: low, event_id: 4648}
+  - {id: R007, channel: Security, title: "User account created", severity: high, event_id: 4720}
+  - {id: R008, channel: Security, title: "User account enabled", severity: medium, event_id: 4722}
+  - {id: R009, channel: Security, title: "Password reset attempt", severity: medium, event_id: 4724}
+  - {id: R010, channel: Security, title: "User account deleted", severity: medium, event_id: 4726}
+  - id: R011
+    channel: Security
+    title: Member added to a security group
+    severity: high
+    event_id: 4732
+  - {id: R012, channel: Security, title: "Account locked out", severity: medium, event_id: 4740}
+  - {id: R013, channel: Security, title: "Service installed (Security log)", severity: high, event_id: 4697}
+  - {id: R014, channel: Security, title: "Process created", severity: low, event_id: 4688}
+  - {id: R015, channel: Security, title: "NTLM credential validation", severity: low, event_id: 4776}
+  - {id: R016, channel: Security, title: "Scheduled task deleted", severity: medium, event_id: 4699}
+  - {id: R017, channel: Security, title: "Scheduled task updated", severity: medium, event_id: 4702}
+  - {id: R018, channel: Security, title: "Special privileges assigned to logon", severity: low, event_id: 4672}
+
+  # ---------------- System ----------------
+  - {id: R020, channel: System, title: "System log cleared", severity: high, event_id: 104}
+  - {id: R021, channel: System, title: "New service installed", severity: high, event_id: 7045}
+  - {id: R022, channel: System, title: "Service start type changed", severity: medium, event_id: 7040}
+  - {id: R023, channel: System, title: "Service terminated unexpectedly", severity: medium, event_id: 7034}
+  - {id: R024, channel: System, title: "Unexpected shutdown", severity: medium, event_id: 6008}
+  - {id: R025, channel: System, title: "Event log service stopped", severity: high, event_id: 6006}
+  - {id: R026, channel: System, title: "System shutdown or restart initiated", severity: low, event_id: 1074}
+  - {id: R027, channel: System, title: "Kernel power loss (reboot without clean shutdown)", severity: medium, event_id: 41}
+
+  # ---------------- Sysmon ----------------
+  - {id: R030, channel: Sysmon, title: "Process created", severity: low, event_id: 1}
+  - {id: R031, channel: Sysmon, title: "Network connection", severity: low, event_id: 3}
+  - {id: R032, channel: Sysmon, title: "Driver loaded", severity: medium, event_id: 6}
+  - {id: R033, channel: Sysmon, title: "Image/DLL loaded", severity: low, event_id: 7}
+  - {id: R034, channel: Sysmon, title: "Remote thread created (injection)", severity: high, event_id: 8}
+  - {id: R035, channel: Sysmon, title: "Process memory accessed (credential dumping?)", severity: high, event_id: 10}
+  - {id: R036, channel: Sysmon, title: "File created", severity: low, event_id: 11}
+  - {id: R037, channel: Sysmon, title: "Registry key or value created/deleted", severity: low, event_id: 12}
+  - {id: R038, channel: Sysmon, title: "Registry value set", severity: low, event_id: 13}
+  - {id: R039, channel: Sysmon, title: "Named pipe created or connected", severity: medium, event_id: 17}
+  - {id: R040, channel: Sysmon, title: "WMI persistence (filter/consumer/binding)", severity: high, event_id: 19}
+  - {id: R041, channel: Sysmon, title: "DNS query", severity: low, event_id: 22}
+  - {id: R042, channel: Sysmon, title: "File delete archived", severity: low, event_id: 23}
+  - {id: R043, channel: Sysmon, title: "Process tampering (hollowing)", severity: high, event_id: 25}
+
+  # ---------------- Windows Defender ----------------
+  - {id: R050, channel: Defender, title: "Malware detected", severity: high, event_id: 1116}
+  - {id: R051, channel: Defender, title: "Action taken on malware", severity: medium, event_id: 1117}
+  - {id: R052, channel: Defender, title: "Action on malware failed", severity: high, event_id: 1118}
+  - {id: R053, channel: Defender, title: "Real-time protection disabled", severity: high, event_id: 5001}
+  - {id: R054, channel: Defender, title: "Defender settings changed", severity: medium, event_id: 5007}
+  - {id: R055, channel: Defender, title: "Scanning for malware disabled", severity: high, event_id: 5010}
+  - {id: R056, channel: Defender, title: "Behavior monitoring disabled", severity: high, event_id: 5012}
+  - {id: R057, channel: Defender, title: "Malware history deleted", severity: high, event_id: 1013}
+
+  # ---------------- Windows Firewall ----------------
+  - {id: R060, channel: Firewall, title: "Firewall rule added", severity: medium, event_id: 2004}
+  - {id: R061, channel: Firewall, title: "Firewall rule modified", severity: medium, event_id: 2005}
+  - {id: R062, channel: Firewall, title: "Firewall rule deleted", severity: medium, event_id: 2006}
+  - {id: R063, channel: Firewall, title: "Firewall settings changed", severity: medium, event_id: 2003}
+  - {id: R064, channel: Firewall, title: "All firewall rules deleted", severity: high, event_id: 2033}
+
+  # ---------------- PowerShell Operational ----------------
+  - {id: R070, channel: PowerShell, title: "Script block logged", severity: medium, event_id: 4104}
+  - {id: R071, channel: PowerShell, title: "Module/pipeline execution", severity: low, event_id: 4103}
+  - {id: R072, channel: PowerShell, title: "PowerShell engine started", severity: low, event_id: 400}
+  - {id: R073, channel: PowerShell, title: "Remote PowerShell session", severity: medium, event_id: 53504}
+
+  # ---------------- NTFS ----------------
+  - {id: R080, channel: NTFS, title: "File system corruption detected", severity: high, event_id: 55}
+  - {id: R081, channel: NTFS, title: "Delayed write failed", severity: medium, event_id: 50}
+  - {id: R082, channel: NTFS, title: "Volume flush failed", severity: medium, event_id: 140}
+
+  - id: R090
+    channel: Sysmon
+    title: Execution from Downloads folder
+    severity: medium
+    event_id: 1
+    conditions:
+    - {field: Image, op: contains, value: "\\Downloads\\"}
+
+  - id: R091
+    channel: Sysmon
+    title: Double extension executable
+    severity: high
+    event_id: 1
+    conditions:
+      - {field: Image, op: regex, value: '\.(pdf|doc|docx|xls|jpg|txt)?\.?exe\.exe$|\.(pdf|doc|jpg)\.exe$'}
+      
+  - id: R092
+    channel: Sysmon
+    title: System binary name created outside Windows dir
+    severity: high
+    event_id: 11
+    conditions:
+      - {field: TargetFilename, op: regex, value: '\\(taskhost|svchost|lsass|csrss|explorer)\.exe$'}
+      - {field: TargetFilename, op: not_startswith, value: "C:\\Windows\\"}

@@ -99,4 +99,3 @@ class digestion:
                 batch = []
         if batch: # remaning left over batch
             self.insertBatch(batch)
-
