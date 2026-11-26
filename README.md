@@ -3,6 +3,8 @@
 Windows Event Triage is a Python tool for ingesting Windows Event Log (`.evtx`) files, normalizing their contents, and identifying potentially suspicious events.
 
 The project combines related event logs into a SQLite database, matches events against a set of YAML rules, and exports the findings as JSON. The resulting JSON is intended to be small enough to send to an LLM for creating a chronological attack timeline.
+ 
+See [PROGRESS.md](./PROGRESS.md) for implemented features, planned work, and scrapped ideas.
 
 ## How It Works
 
@@ -34,6 +36,3 @@ The current rules are intentionally simple and serve as a starting point for lea
 
 Most of the project implementation and test cases are written by me. AI assistance has been used for selected tasks, including EVTX parsing, generating simple YAML rules, and debugging unexpected output during testing.
 
-## Development Status
-
-See [PROGRESS.md](./PROGRESS.md) for implemented features, planned work, and scrapped ideas.
