@@ -24,5 +24,5 @@
 
 Last updated: 26 November 2026
 
-![mama mia](misc/images.jpg)
+![mama mia](images.jpg)
 
